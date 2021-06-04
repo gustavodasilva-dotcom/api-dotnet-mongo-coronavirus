@@ -21,9 +21,14 @@ namespace Api.Controllers
         [HttpPost]
         public ActionResult SalvarInfectado([FromBody] InfectadoDto dto)
         {
-            var infectado = new Infectado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTestePositivo, dto.Latitude, dto.Longitude);
+            bool existe = _infectadosCollection.Find(i => i.Cpf == dto.Cpf).Any();
 
-            _infectadosCollection.InsertOne(infectado);
+            if (existe == true)
+                return StatusCode(409, "Um infectado com esse CPF já existe!");
+
+            var novoInfectado = new Infectado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTestePositivo, dto.Latitude, dto.Longitude);
+
+            _infectadosCollection.InsertOne(novoInfectado);
 
             return StatusCode(201, "Infectado adicionado com sucesso!");
         }
@@ -43,6 +48,11 @@ namespace Api.Controllers
         {
             var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
 
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
             var infectado = _infectadosCollection.Find(filtro).Limit(2).Single();
 
             return Ok(infectado);
@@ -50,10 +60,15 @@ namespace Api.Controllers
 
         [HttpPut("{cpfInfectado}")]
         public ActionResult AtualizarInfectado([FromBody] InfectadoDto dto, [FromRoute] string cpfInfectado)
-        {
-            var infectado = new Infectado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTestePositivo, dto.Latitude, dto.Longitude);
-            
+        {   
             var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var infectado = new Infectado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTestePositivo, dto.Latitude, dto.Longitude);
 
             _infectadosCollection.ReplaceOne(filtro, infectado);
 
@@ -64,6 +79,11 @@ namespace Api.Controllers
         public ActionResult DeletarInfectado([FromRoute] string cpfInfectado)
         {
             var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
 
             _infectadosCollection.DeleteOne(filtro);
 

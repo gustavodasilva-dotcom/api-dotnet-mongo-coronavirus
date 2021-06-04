@@ -21,6 +21,11 @@ namespace Api.Controllers
         [HttpPost]
         public ActionResult SalvarTratado([FromBody] TratadoDto dto)
         {
+            bool existe = _tratadosCollection.Find(t => t.Cpf == dto.Cpf).Any();
+
+            if (existe == true)
+                return StatusCode(409, "Um tratado com esse CPF já existe!");
+
             var tratado = new Tratado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTesteNegativo, dto.Latitude, dto.Longitude);
 
             _tratadosCollection.InsertOne(tratado);
@@ -41,6 +46,11 @@ namespace Api.Controllers
         {
             var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
 
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+
             var tratado = _tratadosCollection.Find(filtro).Limit(2).Single();
 
             return Ok(tratado);
@@ -49,9 +59,14 @@ namespace Api.Controllers
         [HttpPut("{cpfTratado}")]
         public ActionResult AtualizarTratado([FromBody] TratadoDto dto, [FromRoute] string cpfTratado)
         {
-            var tratado = new Tratado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTesteNegativo, dto.Latitude, dto.Longitude);
-
             var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+
+            var tratado = new Tratado(dto.DataDeNascimento, dto.Sexo, dto.Cpf, dto.DataTesteNegativo, dto.Latitude, dto.Longitude);
 
             _tratadosCollection.ReplaceOne(filtro, tratado);
 
@@ -62,6 +77,11 @@ namespace Api.Controllers
         public ActionResult DeletarTratado([FromRoute] string cpfTratado)
         {
             var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
 
             _tratadosCollection.DeleteOne(filtro);
 
