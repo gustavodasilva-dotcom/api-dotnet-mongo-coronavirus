@@ -1,7 +1,9 @@
+using System;
 using Api.Data.Collections;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace Api.Controllers
 {
@@ -73,6 +75,93 @@ namespace Api.Controllers
             _infectadosCollection.ReplaceOne(filtro, infectado);
 
             return Ok("Infectado atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfInfectado}/data-de-nascimento/{dataDeNascimento}")]
+        public ActionResult AtualizarInfectado([FromRoute] string cpfInfectado, DateTime dataDeNascimento)
+        {
+            var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var atualizar = Builders<Infectado>.Update.Set(i => i.DataDeNascimento, dataDeNascimento);
+
+            _infectadosCollection.UpdateOne(filtro, atualizar);
+            
+            return Ok("Data de nascimento atualizada com sucesso!");
+        }
+
+        [HttpPatch("{cpfInfectado}/sexo/{sexo}")]
+        public ActionResult AtualizarInfectado([FromRoute] string cpfInfectado, string sexo)
+        {
+            var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var atualizar = Builders<Infectado>.Update.Set(i => i.Sexo, sexo);
+
+            _infectadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Sexo atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfInfectado}/cpf/{cpf}")]
+        public ActionResult AtualizarInfectadoCpf([FromRoute] string cpfInfectado, string cpf)
+        {
+            var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var atualizar = Builders<Infectado>.Update.Set(i => i.Cpf, cpf);
+
+            _infectadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("CPF atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfInfectado}/data-teste-positivo/{dataTestePositivo}")]
+        public ActionResult AtualizarInfectadoDataTestePositivo([FromRoute] string cpfInfectado, [FromRoute] DateTime dataTestePositivo)
+        {
+            var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var atualizar = Builders<Infectado>.Update.Set(i => i.DataTestePositivo, dataTestePositivo);
+
+            _infectadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Data de teste positivo atualizada com sucesso!");
+        }
+
+        [HttpPatch("{cpfInfectado}/localizacao/{latitude:double}/{longitude:double}")]
+        public ActionResult AtualizarInfectado([FromRoute] string cpfInfectado, [FromRoute] double longitude, [FromRoute] double latitude)
+        {
+            var filtro = Builders<Infectado>.Filter.Where(i => i.Cpf == cpfInfectado);
+
+            bool existe = _infectadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum infectado com esse CPF!");
+
+            var localizacao = new GeoJson2DGeographicCoordinates(longitude, latitude);
+
+            var atualizar = Builders<Infectado>.Update.Set(i => i.Localizacao, localizacao);
+
+            _infectadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Localização atualizada com sucesso!");
         }
 
         [HttpDelete("{cpfInfectado}")]

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ohDEJxDI9BGxFK1pnA6MG9qfBza8M0ExDbvT/XN1YGSDl5VjnvGXn79Ev6Hq2Fr1GVSryOIhCje/yHlXK2fN2g==",
+  "dgSpecHash": "fQhOJt43MMZCAdIzUGe6lkfz0RPzUWNHUnOKmTJII8RC7Ohx4b8DCPPDv54AnaoLN9BSyfHpNvZ3U9ASSo2+BA==",
   "success": true,
-  "projectFilePath": "C:\\workspace\\Api\\Api.csproj",
+  "projectFilePath": "C:\\workspace\\api-dotnet-mongo-coronavirus\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gusta\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",

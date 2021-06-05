@@ -2,6 +2,8 @@ using Api.Data.Collections;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
+using System;
 
 namespace Api.Controllers
 {
@@ -71,6 +73,93 @@ namespace Api.Controllers
             _tratadosCollection.ReplaceOne(filtro, tratado);
 
             return Ok("Tratado atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfTratado}/data-de-nascimento/{dataDeNascimento}")]
+        public ActionResult AtualizarTratado([FromRoute] string cpfTratado, [FromRoute] DateTime dataDeNascimento)
+        {
+            var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+            
+            var atualizar = Builders<Tratado>.Update.Set(t => t.DataDeNascimento, dataDeNascimento);
+
+            _tratadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Data de nascimento atualizada com sucesso!");
+        }
+
+        [HttpPatch("{cpfTratado}/sexo/{sexo}")]
+        public ActionResult AtualizarTratado([FromRoute] string cpfTratado, string sexo)
+        {
+            var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+
+            var atualizar = Builders<Tratado>.Update.Set(t => t.Sexo, sexo);
+
+            _tratadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Sexo atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfTratado}/cpf/{cpf}")]
+        public ActionResult AutalizarTratadoCpf([FromRoute] string cpfTratado, string cpf)
+        {
+            var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+
+            var atualizar = Builders<Tratado>.Update.Set(t => t.Cpf, cpf);
+
+            _tratadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("CPF atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfTratado}/data-teste-negativo/{dataTesteNegativo}")]
+        public ActionResult AtualizarTratadoDataTesteNegativo([FromRoute] string cpfTratado, [FromRoute] DateTime dataTesteNegativo)
+        {
+            var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+            
+            var atualizar = Builders<Tratado>.Update.Set(t => t.DataTesteNegativo, dataTesteNegativo);
+
+            _tratadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Data de teste negativo atualizado com sucesso!");
+        }
+
+        [HttpPatch("{cpfTratado}/localizacao/{latitude:double}/{longitude:double}")]
+        public ActionResult AtualizarTratado([FromRoute] string cpfTratado, [FromRoute] double longitude, [FromRoute] double latitude)
+        {
+            var filtro = Builders<Tratado>.Filter.Where(t => t.Cpf == cpfTratado);
+
+            bool existe = _tratadosCollection.Find(filtro).Any();
+
+            if (existe == false)
+                return StatusCode(404, "Não foi encontrado nenhum tratado com esse CPF!");
+            
+            var localizacao = new GeoJson2DGeographicCoordinates(longitude, latitude);
+
+            var atualizar = Builders<Tratado>.Update.Set(t => t.Localizacao, localizacao);
+
+            _tratadosCollection.UpdateOne(filtro, atualizar);
+
+            return Ok("Localização atualizada com sucesso!");
         }
 
         [HttpDelete("{cpfTratado}")]

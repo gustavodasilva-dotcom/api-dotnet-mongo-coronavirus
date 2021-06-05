@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\workspace\\Api\\Api.csproj": {}
+    "C:\\workspace\\api-dotnet-mongo-coronavirus\\Api.csproj": {}
   },
   "projects": {
-    "C:\\workspace\\Api\\Api.csproj": {
+    "C:\\workspace\\api-dotnet-mongo-coronavirus\\Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\workspace\\Api\\Api.csproj",
+        "projectUniqueName": "C:\\workspace\\api-dotnet-mongo-coronavirus\\Api.csproj",
         "projectName": "Api",
-        "projectPath": "C:\\workspace\\Api\\Api.csproj",
+        "projectPath": "C:\\workspace\\api-dotnet-mongo-coronavirus\\Api.csproj",
         "packagesPath": "C:\\Users\\gusta\\.nuget\\packages\\",
-        "outputPath": "C:\\workspace\\Api\\obj\\",
+        "outputPath": "C:\\workspace\\api-dotnet-mongo-coronavirus\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
